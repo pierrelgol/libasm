@@ -22,6 +22,7 @@ static void report_test(const char *test_name, int passed)
 
 int main(void)
 {
+    const char *source_literal;
     char destination_buffer[32];
     char read_buffer[8];
     char *duplicated;
@@ -58,10 +59,11 @@ int main(void)
     report_test("ft_read invalid fd return", io_result == -1);
     report_test("ft_read invalid fd errno", errno == EBADF);
 
-    duplicated = ft_strdup("duplicate me");
+    source_literal = "duplicate me";
+    duplicated = ft_strdup(source_literal);
     report_test("ft_strdup alloc", duplicated != NULL);
     report_test("ft_strdup content", duplicated != NULL && strcmp(duplicated, "duplicate me") == 0);
-    report_test("ft_strdup pointer", duplicated != NULL && duplicated != "duplicate me");
+    report_test("ft_strdup pointer", duplicated != NULL && duplicated != source_literal);
     free(duplicated);
 
     duplicated = ft_strdup("");
