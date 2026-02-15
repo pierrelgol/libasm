@@ -18,7 +18,7 @@ ft_read_handle_error:
     mov edi, eax                    ; keep errno value for store
 
     sub rsp, 8                      ; align stack before external call
-    call __errno_location
+    call __errno_location wrt ..plt
     add rsp, 8
 
     mov dword [rax], edi            ; *errno = errno_value
