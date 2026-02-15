@@ -16,7 +16,6 @@ OBJ_ASM = $(SRC_ASM:.s=.o)
 
 TEST_NAME = libasm_test
 TEST_SRC = main.c
-TEST_OBJ = $(TEST_SRC:.c=.o)
 
 all: $(NAME)
 
@@ -26,15 +25,20 @@ $(NAME): $(OBJ_ASM)
 %.o: %.s
 	$(NASM) $(NASMFLAGS) $< -o $@
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(TEST_NAME): $(TEST_SRC) $(NAME) include/libasm.h
+	$(CC) $(CFLAGS) $(TEST_SRC) $(NAME) -o $(TEST_NAME)
+
+test: $(TEST_NAME)
+
+run: test
+	./$(TEST_NAME)
 
 clean:
-	rm -f $(OBJ_ASM) $(TEST_OBJ)
+	rm -f $(OBJ_ASM)
 
 fclean: clean
 	rm -f $(NAME) $(TEST_NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re test run
