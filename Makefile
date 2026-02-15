@@ -5,7 +5,8 @@ NASMFLAGS = -f elf64 -g
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Iinclude
 
-SRC_ASM =
+SRC_ASM = \
+	src/ft_strlen.s
 OBJ_ASM = $(SRC_ASM:.s=.o)
 
 TEST_NAME = libasm_test
