@@ -6,7 +6,7 @@ global ft_strcmp
 
 ; int ft_strcmp(const char *left_string_pointer, const char *right_string_pointer)
 ft_strcmp:
-ft_strcmp_loop:
+ft_strcmp_compare_loop:
     movzx eax, byte [rdi]           ; left unsigned char
     movzx edx, byte [rsi]           ; right unsigned char
     cmp eax, edx
@@ -17,7 +17,7 @@ ft_strcmp_loop:
 
     inc rdi
     inc rsi
-    jmp ft_strcmp_loop
+    jmp ft_strcmp_compare_loop
 
 ft_strcmp_diff:
     sub eax, edx                    ; strcmp result

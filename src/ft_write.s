@@ -10,10 +10,10 @@ ft_write:
     mov rax, 1                      ; SYS_write
     syscall
     test rax, rax
-    js ft_write_error
+    js ft_write_handle_error
     ret
 
-ft_write_error:
+ft_write_handle_error:
     neg rax                         ; convert -errno to errno
     mov edi, eax                    ; keep errno value for store
 

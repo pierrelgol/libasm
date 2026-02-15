@@ -10,10 +10,10 @@ ft_read:
     mov rax, 0                      ; SYS_read
     syscall
     test rax, rax
-    js ft_read_error
+    js ft_read_handle_error
     ret
 
-ft_read_error:
+ft_read_handle_error:
     neg rax                         ; convert -errno to errno
     mov edi, eax                    ; keep errno value for store
 
