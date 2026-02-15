@@ -18,6 +18,10 @@ TEST_NAME = libasm_test
 TEST_SRC = main.c
 CHECK_NAME = libasm_check
 CHECK_SRC = tests/test_libasm.c
+INTEGRATION_NAME = tests/integration_read_write
+INTEGRATION_SRC = tests/integration_read_write.c
+INTEGRATION_IN = tests/test_libasm.c
+INTEGRATION_OUT = tests/test_libasm.copy.c
 
 all: $(NAME)
 
@@ -33,6 +37,9 @@ $(TEST_NAME): $(TEST_SRC) $(NAME) include/libasm.h
 $(CHECK_NAME): $(CHECK_SRC) $(NAME) include/libasm.h
 	$(CC) $(CFLAGS) $(CHECK_SRC) $(NAME) -o $(CHECK_NAME)
 
+$(INTEGRATION_NAME): $(INTEGRATION_SRC) $(NAME) include/libasm.h
+	$(CC) $(CFLAGS) $(INTEGRATION_SRC) $(NAME) -o $(INTEGRATION_NAME)
+
 test: $(TEST_NAME)
 
 run: test
@@ -41,12 +48,17 @@ run: test
 check: $(CHECK_NAME)
 	./$(CHECK_NAME)
 
+integration: $(INTEGRATION_NAME)
+	./$(INTEGRATION_NAME) $(INTEGRATION_IN) $(INTEGRATION_OUT)
+	cmp -s $(INTEGRATION_IN) $(INTEGRATION_OUT)
+	@echo "integration read/write check passed"
+
 clean:
 	rm -f $(OBJ_ASM)
 
 fclean: clean
-	rm -f $(NAME) $(TEST_NAME) $(CHECK_NAME)
+	rm -f $(NAME) $(TEST_NAME) $(CHECK_NAME) $(INTEGRATION_NAME) $(INTEGRATION_OUT)
 
 re: fclean all
 
-.PHONY: all clean fclean re test run check
+.PHONY: all clean fclean re test run check integration
