@@ -10,7 +10,8 @@ SRC_ASM = \
 	src/ft_strcpy.s \
 	src/ft_strcmp.s \
 	src/ft_write.s \
-	src/ft_read.s
+	src/ft_read.s \
+	src/ft_strdup.s
 OBJ_ASM = $(SRC_ASM:.s=.o)
 
 TEST_NAME = libasm_test
