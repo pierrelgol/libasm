@@ -142,6 +142,51 @@ static void test_write_read_behavior(void) {
         assert_true("read bad fd errno", errno == EBADF);
 }
 
+static void test_read_additional_cases(void) {
+        int     pipe_fds[2];
+        char    buffer[16];
+        ssize_t result;
+
+        if (pipe(pipe_fds) != 0) {
+                assert_true("read extra pipe setup", 0);
+                return;
+        }
+
+        /* Verify short reads consume only requested bytes. */
+        (void)write(pipe_fds[1], "abcdef", 6);
+        result = ft_read(pipe_fds[0], buffer, 3);
+        assert_true("read partial count", result == 3);
+        assert_true("read partial bytes", result == 3 && memcmp(buffer, "abc", 3) == 0);
+
+        result = read(pipe_fds[0], buffer, sizeof(buffer));
+        assert_true("read remaining bytes", result == 3 && memcmp(buffer, "def", 3) == 0);
+
+        close(pipe_fds[0]);
+        close(pipe_fds[1]);
+
+        if (pipe(pipe_fds) != 0) {
+                assert_true("read eof pipe setup", 0);
+                return;
+        }
+
+        close(pipe_fds[1]);
+        result = ft_read(pipe_fds[0], buffer, sizeof(buffer));
+        assert_true("read eof", result == 0);
+        close(pipe_fds[0]);
+
+        if (pipe(pipe_fds) != 0) {
+                assert_true("read zero-count pipe setup", 0);
+                return;
+        }
+
+        errno  = 123;
+        result = ft_read(pipe_fds[0], buffer, 0);
+        assert_true("read zero count", result == 0);
+        assert_true("read success preserves errno", errno == 123);
+        close(pipe_fds[0]);
+        close(pipe_fds[1]);
+}
+
 static void test_strdup_against_libc(void) {
         char  source_buffer[257];
         char *dup;
@@ -179,6 +224,7 @@ int main(void) {
         test_strcpy_against_libc();
         test_strcmp_against_libc();
         test_write_read_behavior();
+        test_read_additional_cases();
         test_strdup_against_libc();
 
         if (g_failures != 0) {
